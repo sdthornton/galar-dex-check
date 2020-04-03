@@ -1,0 +1,33 @@
+{
+  "name": "galar-dex-check",
+  "version": "0.0.1",
+  "main": "javascripts/site.js",
+  "dependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-vue": "^2.0.2",
+    "cross-env": "^5.0.1",
+    "css-loader": "^0.28.4",
+    "file-loader": "^0.11.2",
+    "json-loader": "^0.5.4",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "vue": "^2.6.11",
+    "vue-gapi": "^0.1.2",
+    "vue-loader": "^12.2.2",
+    "vue-material": "^1.0.0-beta-11",
+    "vue-style-loader": "^3.0.1",
+    "vue-template-compiler": "^2.4.1",
+    "webpack": "^3.3.0"
+  },
+  "description": "A visual platform for checking and creating an all-forms living dex in Pokemon Sw/Sh",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "bundle exec middleman"
+  },
+  "author": "Sam Thornton <sdthornton@live.com>",
+  "license": "ISC"
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= current_page.data.title || "Middleman" %></title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta content="width=device-width,initial-scale=1,minimal-ui,shrink-to-fit=no" name="viewport">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <%= stylesheet_link_tag "site" %>
+  </head>
+  <body>
+    <main id="app">
+      <%= yield %>
+    </main>
+    <%= javascript_include_tag "site.bundle", defer: true, async: true %>
+  </body>
+</html>
