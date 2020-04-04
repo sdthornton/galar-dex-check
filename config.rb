@@ -31,7 +31,7 @@ configure :build do
   ignore '/assets/javascripts/site.js'
   activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/build'
   activate :minify_css
-  activate :minify_html
+  # activate :minify_html
   # activate :minify_javascript
   activate :gzip
 end
