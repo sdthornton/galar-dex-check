@@ -58,7 +58,7 @@ const app = new Vue({
           !d.legend &&
           !this.isMew(d) &&
           !this.isGalarSlowpoke(d)
-        )
+        );
       });
       return this.chunk(filtered, 30);
     },

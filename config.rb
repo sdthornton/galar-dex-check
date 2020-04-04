@@ -27,11 +27,11 @@ end
 set :build_dir, 'docs'
 
 configure :build do
-  ignore '/assets/javascripts/components/*.vue'
-  ignore '/assets/javascripts/site.js'
-  activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/build'
+  ignore '/javascripts/components/*.vue'
+  ignore '/javascripts/site.js'
+  activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/'
   activate :minify_css
-  # activate :minify_html
-  # activate :minify_javascript
+  activate :minify_html
+  activate :minify_javascript
   activate :gzip
 end
