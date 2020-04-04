@@ -27,8 +27,8 @@ end
 configure :build do
   ignore '/assets/javascripts/components/*.vue'
   ignore '/assets/javascripts/site.js'
-  activate :minify_javascript
-  activate :minify_css
-  activate :minify_html
-  activate :gzip
+  # activate :minify_javascript
+  # activate :minify_css
+  # activate :minify_html
+  # activate :gzip
 end

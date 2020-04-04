@@ -36,6 +36,3 @@
 # Don't include sensitive files
 .env
 .env.*
-
-# Ignore Build
-/build
