@@ -24,12 +24,14 @@ configure :development do
   activate :livereload
 end
 
+set :build_dir, 'docs'
+
 configure :build do
   ignore '/assets/javascripts/components/*.vue'
   ignore '/assets/javascripts/site.js'
+  activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/build'
   activate :minify_css
   activate :minify_html
   # activate :minify_javascript
   activate :gzip
-  activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/build'
 end
