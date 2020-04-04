@@ -4,7 +4,9 @@
   "main": "javascripts/site.js",
   "dependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
+    "@babel/runtime": "^7.9.2",
     "babel-loader": "^8.1.0",
     "babel-preset-vue": "^2.0.2",
     "cross-env": "^7.0.2",
@@ -24,8 +26,7 @@
     "webpack-cli": "3.3.11"
   },
   "description": "A visual platform for checking and creating an all-forms living dex in Pokemon Sw/Sh",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "bundle exec middleman"
