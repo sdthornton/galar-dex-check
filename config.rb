@@ -13,7 +13,7 @@ activate :external_pipeline,
 
 activate :dotenv
 activate :asset_hash
-activate :directory_indexes
+# activate :directory_indexes
 
 # Per-page layout changes
 page '/*.xml', layout: false
