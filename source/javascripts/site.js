@@ -17,6 +17,15 @@ import Vue from 'vue';
 import VueMaterial from 'vue-material';
 // import VueGapi from 'vue-gapi';
 
+Vue.config.productionTip = true;
+Vue.config.devtools = true;
+Vue.config.errorHandler = function(err, vm, info) {
+  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+};
+Vue.config.warnHandler = function(msg, vm, trace) {
+  console.log(`Warn: ${msg}\nTrace: ${trace}`);
+}
+
 Vue.use(VueMaterial);
 // Vue.use(VueGapi, apiConfig);
 
