@@ -12,10 +12,9 @@
   </head>
   <body>
     <main id="app">
-      <template>
-        <%= yield %>
-      </template>
+      <%= yield %>
     </main>
-    <%= javascript_include_tag "site.bundle", defer: true, async: true %>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <%= javascript_include_tag "site.bundle" %>
   </body>
 </html>

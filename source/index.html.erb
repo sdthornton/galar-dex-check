@@ -1,235 +1,237 @@
 ---
 title: Sarith &amp; The All-Forms Living Dex
 ---
-<h1 class="md-display-3 page-title">
-  Sarith &amp; The All-Forms
-</h1>
-<h2 class="md-headline page-sub-title">
-  - A Living Dex in Three Parts -
-</h2>
+<section>
+  <h1 class="md-display-3 page-title">
+    Sarith &amp; The All-Forms
+  </h1>
+  <h2 class="md-headline page-sub-title">
+    - A Living Dex in Three Parts -
+  </h2>
 
-<div v-if="loading">
-  <h5>
-    Loading&hellip;
-  </h5>
-</div>
-
-<div v-else>
-  <div
-    v-if="isAuthenticated"
-    class="open-missing"
-    @click="showMissing = true"
-  >
-    <md-icon>arrow_back</md-icon>
-    <span>What's left?</span>
-    <span>({{ missingMons.length }})</span>
+  <div v-if="loading">
+    <h5>
+      Loading&hellip;
+    </h5>
   </div>
 
   <div v-else>
-    <a
-      href="#"
-      class="open-missing"
-      @click="login"
-    >
-      Log In
-    </a>
-  </div>
-
-  <div class="md-layout md-gutter boxes">
-    <article
-      v-for="(dexChunk, index) in chunkedDexData"
-      class="box md-layout-item md-layout"
-      :key="`dex-chunk-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          &#8470;
-          <span v-if="dexChunk[dexChunk.length - 1].dexNumber == '-'">
-            {{ dexChunk[0].dexNumber }}-400&plus;
-          </span>
-          <span v-else>
-            {{ dexChunk[0].dexNumber }}-{{ dexChunk[dexChunk.length - 1].dexNumber }}
-          </span>
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
-          @click="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            width="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
-    <article
-      v-for="(dexChunk, index) in chunkedGmaxData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-gmax-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          Gigantic!
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
-          @click="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            width="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
-    <article
-      v-for="(dexChunk, index) in chunkedHatchableHomeData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-hatchable-home-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          No Place
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
-          @click="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            width="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
-    <article
-      v-for="(dexChunk, index) in chunkedLegendaryHomeData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-legendary-home-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          Like Home
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
-          @click="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            width="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
     <div
-      class="missing-mons-bg"
-      :class="{ 'visible': showMissing }"
-    ></div>
-    <article
-      class="missing-mons md-elevation-21"
-      :class="{ 'visible': showMissing }"
+      v-if="isAuthenticated"
+      class="open-missing"
+      @click.prevent="showMissing = true"
     >
-      <h2 class="md-headline">
-        {{ missingMons.length }} Missing &lsquo;Mons
-      </h2>
+      <md-icon>arrow_back</md-icon>
+      <span>What's left?</span>
+      <span>({{ missingMons.length }})</span>
+    </div>
+
+    <div v-else>
+      <a
+        href="#"
+        class="open-missing"
+        @click.prevent="login"
+      >
+        Log In
+      </a>
+    </div>
+
+    <div class="md-layout md-gutter boxes">
+      <article
+        v-for="(dexChunk, index) in chunkedDexData"
+        class="box md-layout-item md-layout"
+        :key="`dex-chunk-${index}`"
+      >
+        <div class="box-title md-layout-item md-size-100">
+          <h4 class="box-title__content">
+            &#8470;
+            <span v-if="dexChunk[dexChunk.length - 1].dexNumber == '-'">
+              {{ dexChunk[0].dexNumber }}-400&plus;
+            </span>
+            <span v-else>
+              {{ dexChunk[0].dexNumber }}-{{ dexChunk[dexChunk.length - 1].dexNumber }}
+            </span>
+          </h4>
+        </div>
+        <div
+          v-for="entry in dexChunk"
+          class="md-layout-item box-column"
+          :key="entry.id"
+        >
+          <div
+            class="box-item"
+            :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
+            @click.prevent="boxClick(entry)"
+          >
+            <img
+              :src="entry.sprite"
+              class="sprite"
+              height="40"
+              width="40"
+              loading="lazy"
+            >
+            <md-tooltip>
+              #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+            </md-tooltip>
+          </div>
+        </div>
+        <div
+          v-for="i in (30 - dexChunk.length)"
+          class="md-layout-item md-size-16 box-column"
+          :key="i"
+        >
+          <div class="box-item" />
+        </div>
+      </article>
+
+      <article
+        v-for="(dexChunk, index) in chunkedGmaxData"
+        class="box md-layout-item md-layout"
+        :key="`chunk-gmax-${index}`"
+      >
+        <div class="box-title md-layout-item md-size-100">
+          <h4 class="box-title__content">
+            Gigantic!
+          </h4>
+        </div>
+        <div
+          v-for="entry in dexChunk"
+          class="md-layout-item box-column"
+          :key="entry.id"
+        >
+          <div
+            class="box-item"
+            :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
+            @click.prevent="boxClick(entry)"
+          >
+            <img
+              :src="entry.sprite"
+              class="sprite"
+              height="40"
+              width="40"
+              loading="lazy"
+            >
+            <md-tooltip>
+              #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+            </md-tooltip>
+          </div>
+        </div>
+        <div
+          v-for="i in (30 - dexChunk.length)"
+          class="md-layout-item md-size-16 box-column"
+          :key="i"
+        >
+          <div class="box-item" />
+        </div>
+      </article>
+
+      <article
+        v-for="(dexChunk, index) in chunkedHatchableHomeData"
+        class="box md-layout-item md-layout"
+        :key="`chunk-hatchable-home-${index}`"
+      >
+        <div class="box-title md-layout-item md-size-100">
+          <h4 class="box-title__content">
+            No Place
+          </h4>
+        </div>
+        <div
+          v-for="entry in dexChunk"
+          class="md-layout-item box-column"
+          :key="entry.id"
+        >
+          <div
+            class="box-item"
+            :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
+            @click.prevent="boxClick(entry)"
+          >
+            <img
+              :src="entry.sprite"
+              class="sprite"
+              height="40"
+              width="40"
+              loading="lazy"
+            >
+            <md-tooltip>
+              #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+            </md-tooltip>
+          </div>
+        </div>
+        <div
+          v-for="i in (30 - dexChunk.length)"
+          class="md-layout-item md-size-16 box-column"
+          :key="i"
+        >
+          <div class="box-item" />
+        </div>
+      </article>
+
+      <article
+        v-for="(dexChunk, index) in chunkedLegendaryHomeData"
+        class="box md-layout-item md-layout"
+        :key="`chunk-legendary-home-${index}`"
+      >
+        <div class="box-title md-layout-item md-size-100">
+          <h4 class="box-title__content">
+            Like Home
+          </h4>
+        </div>
+        <div
+          v-for="entry in dexChunk"
+          class="md-layout-item box-column"
+          :key="entry.id"
+        >
+          <div
+            class="box-item"
+            :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
+            @click.prevent="boxClick(entry)"
+          >
+            <img
+              :src="entry.sprite"
+              class="sprite"
+              height="40"
+              width="40"
+              loading="lazy"
+            >
+            <md-tooltip>
+              #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+            </md-tooltip>
+          </div>
+        </div>
+        <div
+          v-for="i in (30 - dexChunk.length)"
+          class="md-layout-item md-size-16 box-column"
+          :key="i"
+        >
+          <div class="box-item" />
+        </div>
+      </article>
+
       <div
-        class="close-missing"
-        @click="showMissing = false"
+        class="missing-mons-bg"
+        :class="{ 'visible': showMissing }"
+      ></div>
+      <article
+        class="missing-mons md-elevation-21"
+        :class="{ 'visible': showMissing }"
       >
-        &times;
-      </div>
-      <p
-        v-for="entry in missingMons"
-        class="body-2"
-        :key="entry.id"
-      >
-        {{ entry.name }}: {{ entry.gender || entry.form || (entry.gmax && "G-Max") }}
-      </p>
-    </article>
+        <h2 class="md-headline">
+          {{ missingMons.length }} Missing &lsquo;Mons
+        </h2>
+        <div
+          class="close-missing"
+          @click.prevent="showMissing = false"
+        >
+          &times;
+        </div>
+        <p
+          v-for="entry in missingMons"
+          class="body-2"
+          :key="entry.id"
+        >
+          {{ entry.name }}: {{ entry.gender || entry.form || (entry.gmax && "G-Max") }}
+        </p>
+      </article>
+    </div>
   </div>
-</div>
+</section>

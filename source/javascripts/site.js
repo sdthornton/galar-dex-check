@@ -13,21 +13,23 @@ const apiConfig = {
   scope: SCOPE,
 };
 
-import Vue from 'vue';
+// import Vue from 'vue';
 import VueMaterial from 'vue-material';
 // import VueGapi from 'vue-gapi';
 
-Vue.config.productionTip = true;
-Vue.config.devtools = true;
-Vue.config.errorHandler = function(err, vm, info) {
-  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-};
-Vue.config.warnHandler = function(msg, vm, trace) {
-  console.log(`Warn: ${msg}\nTrace: ${trace}`);
-}
-
 Vue.use(VueMaterial);
 // Vue.use(VueGapi, apiConfig);
+
+/* Error Handling */
+window.onerror = function(message, source, line, column, error) {
+  console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
+}
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+Vue.config.errorHandler = function(err, vm, info) {
+  //oopsIDidItAgain();
+  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+}
 
 const app = new Vue({
   el: "#app",
