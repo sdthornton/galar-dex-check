@@ -30,8 +30,8 @@ configure :build do
   ignore '/javascripts/components/*.vue'
   ignore '/javascripts/site.js'
   activate :asset_host, host: '//sdthornton.github.io/galar-dex-check/'
-  activate :minify_css
-  activate :minify_html
+  # activate :minify_css
+  # activate :minify_html
   # activate :minify_javascript
   # activate :gzip
 end
