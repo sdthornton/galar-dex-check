@@ -1,4 +1,3 @@
-// This is where it all goes :)
 const CLIENT_ID = "794803752624-fl20v16vgu8nreunpvhelarirm8t0sd6.apps.googleusercontent.com";
 const CLIENT_SECRET = "KMKNvWGUQUO5sbLigqgMrz2k";
 const API_KEY = "AIzaSyA9N5BNv8dl6CRqb6xXqfxJ_VIxEiFS7eY";

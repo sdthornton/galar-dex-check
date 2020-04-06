@@ -12,7 +12,9 @@
   </head>
   <body>
     <main id="app">
-      <%= yield %>
+      <template>
+        <%= yield %>
+      </template>
     </main>
     <%= javascript_include_tag "site.bundle", defer: true, async: true %>
   </body>
