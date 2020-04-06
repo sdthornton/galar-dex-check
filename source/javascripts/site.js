@@ -23,13 +23,13 @@ Vue.use(VueMaterial);
 /* Error Handling */
 window.onerror = function(message, source, line, column, error) {
   console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
-}
+};
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 Vue.config.errorHandler = function(err, vm, info) {
   //oopsIDidItAgain();
   console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-}
+};
 
 const app = new Vue({
   el: "#app",
@@ -122,7 +122,7 @@ const app = new Vue({
         "id": Number(d.values[0].formattedValue),
         "dexNumber": d.values[1].userEnteredValue.stringValue.replace('#', ''),
         "name": d.values[2].userEnteredValue.stringValue,
-        "sprite": unescape(d.values[3].userEnteredValue.formulaValue).replace(spriteReg, '').replace('")', ''),
+        "sprite": d.values[3].userEnteredValue.formulaValue.replace(spriteReg, '').replace('")', ''),
         "gender": d.values[4] && d.values[4].userEnteredValue ? d.values[4].userEnteredValue.stringValue : "",
         "form": d.values[5] && d.values[5].userEnteredValue ? d.values[5].userEnteredValue.stringValue : "",
         "gmax": d.values[6] && d.values[6].userEnteredValue ? true : false,
