@@ -13,23 +13,23 @@ const apiConfig = {
   scope: SCOPE,
 };
 
-// import Vue from 'vue';
+import Vue from 'vue';
 import VueMaterial from 'vue-material';
-// import VueGapi from 'vue-gapi';
+import VueGapi from 'vue-gapi';
 
 Vue.use(VueMaterial);
-// Vue.use(VueGapi, apiConfig);
+Vue.use(VueGapi, apiConfig);
 
-/* Error Handling */
-window.onerror = function(message, source, line, column, error) {
-  console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
-};
-Vue.config.productionTip = false;
-Vue.config.devtools = false;
-Vue.config.errorHandler = function(err, vm, info) {
-  //oopsIDidItAgain();
-  console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-};
+// /* Error Handling */
+// window.onerror = function(message, source, line, column, error) {
+//   console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
+// };
+// Vue.config.productionTip = false;
+// Vue.config.devtools = false;
+// Vue.config.errorHandler = function(err, vm, info) {
+//   //oopsIDidItAgain();
+//   console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+// };
 
 const app = new Vue({
   el: "#app",
@@ -46,8 +46,7 @@ const app = new Vue({
       return this.loadingGapi || this.loadingData;
     },
     isAuthenticated() {
-      // return this.$isAuthenticated();
-      return false;
+      return this.$isAuthenticated();
     },
     chunkedDexData() {
       let filtered = this.dexData.filter(d => {
@@ -93,13 +92,12 @@ const app = new Vue({
     },
   },
   created() {
-    // this.$getGapiClient().then(() => this.loadingGapi = false);
-    // try {
-    //   window.setInterval(this.$refreshToken(), 2.7e+6);
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    this.loadingGapi = false;
+    this.$getGapiClient().then(() => this.loadingGapi = false);
+    try {
+      window.setInterval(this.$refreshToken(), 2.7e+6);
+    } catch (err) {
+      console.error(err);
+    }
   },
   mounted() {
     this.fetchDexData();
@@ -162,22 +160,22 @@ const app = new Vue({
 
       entry.inBox = !entry.inBox;
 
-      // this.$getGapiClient().then(gapi => {
-      //   gapi.client.sheets.spreadsheets.values.update({
-      //     spreadsheetId: SPREADSHEET_ID,
-      //     range: `K${entry.id}`,
-      //     valueInputOption: "USER_ENTERED",
-      //     resource: body,
-      //   })
-      //   .then()
-      //   .catch(err => {
-      //     alert(`Sorry, couldn't complete that "in box" update.`);
-      //     entry.inBox = !entry.inBox;
-      //   });
-      // });
+      this.$getGapiClient().then(gapi => {
+        gapi.client.sheets.spreadsheets.values.update({
+          spreadsheetId: SPREADSHEET_ID,
+          range: `K${entry.id}`,
+          valueInputOption: "USER_ENTERED",
+          resource: body,
+        })
+        .then()
+        .catch(err => {
+          alert(`Sorry, couldn't complete that "in box" update.`);
+          entry.inBox = !entry.inBox;
+        });
+      });
     },
     login() {
-      // this.$login();
+      this.$login();
     },
   },
 });
