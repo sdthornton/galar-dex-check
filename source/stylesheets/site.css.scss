@@ -3,6 +3,7 @@ $border-radius: 4px;
 body {
   background: rgb(227,255,231);
   background: linear-gradient(90deg, rgba(227,255,231,1) 0%, rgba(217,231,255,1) 100%);
+  padding: 1.5rem 2.25rem 3rem;
 }
 
 main {
@@ -13,7 +14,7 @@ main {
 }
 
 .page-title {
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
 }
 
 .page-sub-title {

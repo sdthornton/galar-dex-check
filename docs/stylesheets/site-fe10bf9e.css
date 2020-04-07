@@ -1,7 +1,8 @@
 body {
   background: #e3ffe7;
   background: -webkit-gradient(linear, left top, right top, from(#e3ffe7), to(#d9e7ff));
-  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%); }
+  background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+  padding: 1.5rem 2.25rem 3rem; }
 
 main {
   margin: 0 auto;
@@ -10,7 +11,7 @@ main {
   text-align: center; }
 
 .page-title {
-  margin-bottom: 0; }
+  margin-bottom: 0.5rem; }
 
 .page-sub-title {
   margin-bottom: 2.25rem;

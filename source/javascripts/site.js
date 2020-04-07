@@ -101,6 +101,11 @@ const app = new Vue({
   },
   mounted() {
     this.fetchDexData();
+    document.addEventListener('keydown', e => {
+      if (e.key == "Escape") {
+        this.showMissing = false;
+      }
+    });
   },
   methods: {
     chunk(arr, size) {
