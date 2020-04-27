@@ -20,22 +20,12 @@ import VueGapi from 'vue-gapi';
 Vue.use(VueMaterial);
 Vue.use(VueGapi, apiConfig);
 
-// /* Error Handling */
-// window.onerror = function(message, source, line, column, error) {
-//   console.log('ONE ERROR HANDLER TO RULE THEM ALL:', message);
-// };
-// Vue.config.productionTip = false;
-// Vue.config.devtools = false;
-// Vue.config.errorHandler = function(err, vm, info) {
-//   //oopsIDidItAgain();
-//   console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-// };
-
 const app = new Vue({
   el: "#app",
   data() {
     return {
       dexData: [],
+      dlcData: [],
       loadingGapi: true,
       loadingData: true,
       showMissing: false,
@@ -60,6 +50,9 @@ const app = new Vue({
         );
       });
       return this.chunk(filtered, 30);
+    },
+    chunkedDLCData() {
+      return this.chunk([...this.dlcData], 30);
     },
     chunkedHatchableHomeData() {
       let filtered = this.dexData.filter(d => {
@@ -151,7 +144,19 @@ const app = new Vue({
             .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
             .map(d => this.createDexJson(d));
 
+        let dlcData =
+            data.sheets[0].data[0].rowData 
+              .filter(d => {
+                return (
+                  d.values && d.values[0] && d.values[0].userEnteredValue &&
+                  d.values[1].userEnteredValue.stringValue.indexOf("?") == 0
+                );
+              })
+              .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
+              .map(d => this.createDexJson(d));
+
         this.dexData = dexData;
+        this.dlcData = dlcData;
       }).finally(() => this.loadingData = false);
     },
     boxClick(entry) {
