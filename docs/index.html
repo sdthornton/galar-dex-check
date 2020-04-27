@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
-    <link href="//sdthornton.github.io/galar-dex-check/stylesheets/site-fe10bf9e.css" rel="stylesheet" />
+    <link href="//sdthornton.github.io/galar-dex-check/stylesheets/site-b1bd1f5f.css" rel="stylesheet" />
   </head>
   <body>
     <main id="app">
       <h1 class="md-display-3 page-title">
-  Sarith &amp; The All-Forms
+  Pokémon Sword with Sarith
 </h1>
-<h2 class="md-headline page-sub-title">
+<h3 class="md-headline page-sub-title">
   - A Living Dex in Three Parts -
-</h2>
+</h3>
 
 <div v-if="loading">
   <h5>
@@ -216,36 +216,83 @@
         <div class="box-item" />
       </div>
     </article>
+  </div>
+  
+  <md-divider class="separator"></md-divider>
 
-    <div
-      class="missing-mons-bg"
-      :class="{ 'visible': showMissing }"
-      @click.prevent="showMissing = false"
-    ></div>
+  <div class="md-layout md-gutter boxes">
     <article
-      class="missing-mons md-elevation-21"
-      :class="{ 'visible': showMissing }"
+      v-for="(dexChunk, index) in chunkedDLCData"
+      class="box md-layout-item md-layout"
+      :key="`chunk-dlc-${index}`"
     >
-      <h2 class="md-headline">
-        {{ missingMons.length }} Missing &lsquo;Mons
-      </h2>
-      <div
-        class="close-missing"
-        @click.prevent="showMissing = false"
-      >
-        &times;
+      <div class="box-title md-layout-item md-size-100">
+        <h4 class="box-title__content">
+          DLC
+        </h4>
       </div>
-      <p
-        v-for="entry in missingMons"
-        class="body-2"
+      <div
+        v-for="entry in dexChunk"
+        class="md-layout-item box-column"
         :key="entry.id"
       >
-        {{ entry.name }}: {{ entry.gender || entry.form || (entry.gmax && "G-Max") }}
-      </p>
+        <div
+          class="box-item"
+          :class="{ 'box-item--missing': isAuthenticated && !entry.inBox }"
+          @click.prevent="boxClick(entry)"
+        >
+          <img
+            :src="entry.sprite"
+            class="sprite"
+            height="40"
+            width="40"
+            loading="lazy"
+          >
+          <md-tooltip>
+            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+          </md-tooltip>
+        </div>
+      </div>
+      <div
+        v-for="i in (30 - dexChunk.length)"
+        class="md-layout-item md-size-16 box-column"
+        :key="i"
+      >
+        <div class="box-item" />
+      </div>
     </article>
   </div>
+
+  <div
+    class="missing-mons-bg"
+    :class="{ 'visible': showMissing }"
+    @click.prevent="showMissing = false"
+  ></div>
+  <article
+    class="missing-mons md-elevation-21"
+    :class="{ 'visible': showMissing }"
+  >
+    <h2 class="md-headline">
+      {{ missingMons.length }} Missing &lsquo;Mons
+    </h2>
+    <div
+      class="close-missing"
+      @click.prevent="showMissing = false"
+    >
+      &times;
+    </div>
+    <p
+      v-for="entry in missingMons"
+      class="body-2"
+      :key="entry.id"
+    >
+      {{ entry.name }}: {{ entry.gender || entry.form || (entry.gmax && "G-Max") }}
+    </p>
+  </article>
+
+
 </div>
     </main>
-    <script src="//sdthornton.github.io/galar-dex-check/javascripts/site.bundle-9d10ed05.js"></script>
+    <script src="//sdthornton.github.io/galar-dex-check/javascripts/site.bundle-74aa27f1.js"></script>
   </body>
 </html>
