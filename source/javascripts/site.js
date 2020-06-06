@@ -16,16 +16,19 @@ const apiConfig = {
 import Vue from 'vue';
 import VueMaterial from 'vue-material';
 import VueGapi from 'vue-gapi';
+import DexBox from './DexBox';
 
 Vue.use(VueMaterial);
 Vue.use(VueGapi, apiConfig);
 
 const app = new Vue({
   el: "#app",
+  components: {
+    DexBox,
+  },
   data() {
     return {
       dexData: [],
-      dlcData: [],
       loadingGapi: true,
       loadingData: true,
       showMissing: false,
@@ -35,30 +38,27 @@ const app = new Vue({
     loading() {
       return this.loadingGapi || this.loadingData;
     },
-    isAuthenticated() {
-      return this.$isAuthenticated();
+    chunkedUnobtainable() {
+      let filtered = this.dexData.filter(d => !d.obtainable);
+      return this.chunk(filtered, 30);
     },
     chunkedDexData() {
       let filtered = this.dexData.filter(d => {
         return (
           !d.gmax &&
-          (
-            d.dexNumber != "-" ||
-            this.isMew(d) ||
-            this.isGalarSlowpoke(d)
-          )
+          d.dexNumber.indexOf("#") == 0 ||
+          this.isMew(d) ||
+          this.isGalarSlowpoke(d)
         );
       });
       return this.chunk(filtered, 30);
-    },
-    chunkedDLCData() {
-      return this.chunk([...this.dlcData], 30);
     },
     chunkedHatchableHomeData() {
       let filtered = this.dexData.filter(d => {
         return (
           d.dexNumber == "-" &&
-          !d.legend &&
+          !d.legendsAndMyths &&
+          !d.gmax &&
           !this.isMew(d) &&
           !this.isGalarSlowpoke(d)
         );
@@ -69,18 +69,27 @@ const app = new Vue({
       let filtered = this.dexData.filter(d => {
         return (
           d.dexNumber == "-" &&
-          d.legend &&
+          d.legendsAndMyths &&
+          !d.gmax &&
           !this.isMew(d)
         );
       });
       return this.chunk(filtered, 30);
     },
     chunkedGmaxData() {
-      let filtered = this.dexData.filter(d => d.gmax);
+      let filtered = this.dexData.filter(d => d.gmax && d.obtainable);
+      return this.chunk(filtered, 30);
+    },
+    chunkedIsleData() {
+      let filtered = this.dexData.filter(d => d.isleOfArmor);
+      return this.chunk(filtered, 30);
+    },
+    chunkedTundraData() {
+      let filtered = this.dexData.filter(d => d.crownTundra);
       return this.chunk(filtered, 30);
     },
     missingMons() {
-      let filtered = this.dexData.filter(d => !d.inBox);
+      let filtered = this.dexData.filter(d => !d.inBox && d.obtainable);
       return filtered;
     },
   },
@@ -116,18 +125,21 @@ const app = new Vue({
       let spriteReg = /\=image\("/gi;
       return {
         "id": Number(d.values[0].formattedValue),
-        "dexNumber": d.values[1].userEnteredValue.stringValue.replace('#', ''),
+        "dexNumber": d.values[1].userEnteredValue.stringValue,
         "name": d.values[2].userEnteredValue.stringValue,
         "sprite": d.values[3].userEnteredValue.formulaValue.replace(spriteReg, '').replace('")', ''),
         "gender": d.values[4] && d.values[4].userEnteredValue ? d.values[4].userEnteredValue.stringValue : "",
         "form": d.values[5] && d.values[5].userEnteredValue ? d.values[5].userEnteredValue.stringValue : "",
         "gmax": d.values[6] && d.values[6].userEnteredValue ? true : false,
-        "legend": d.values[8] && d.values[8].userEnteredValue ? true : false,
+        "isleOfArmor": d.values[8] && d.values[8].userEnteredValue ? true : false,
+        "crownTundra": d.values[9] && d.values[9].userEnteredValue ? true : false,
         "inBox": d.values[10].userEnteredValue.stringValue == "Yes" ? true : false,
+        "obtainable": d.values[12] && d.values[12].userEnteredValue ? false : true,
+        "legendsAndMyths": (d.values[13] || d.values[14]) && (d.values[13].userEnteredValue || d.values[14].userEnteredValue) ? true : false,
       };
     },
     fetchDexData() {
-      fetch(`${SPREADSHEET_URL}?key=${API_KEY}&includeGridData=true&ranges=A2:K&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${SPREADSHEET_URL}?key=${API_KEY}&includeGridData=true&ranges=A2:O822&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -135,32 +147,14 @@ const app = new Vue({
         let data = await res.json();
         let dexData =
           data.sheets[0].data[0].rowData
-            .filter(d => {
-              return (
-                d.values && d.values[0] && d.values[0].userEnteredValue &&
-                (d.values[1].userEnteredValue.stringValue.indexOf("#") == 0 || d.values[1].userEnteredValue.stringValue.indexOf("-") == 0)
-              );
-            })
+            .filter(d => d.values && d.values[0] && d.values[0].userEnteredValue)
             .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
             .map(d => this.createDexJson(d));
-
-        let dlcData =
-            data.sheets[0].data[0].rowData 
-              .filter(d => {
-                return (
-                  d.values && d.values[0] && d.values[0].userEnteredValue &&
-                  d.values[1].userEnteredValue.stringValue.indexOf("?") == 0
-                );
-              })
-              .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
-              .map(d => this.createDexJson(d));
-
         this.dexData = dexData;
-        this.dlcData = dlcData;
       }).finally(() => this.loadingData = false);
     },
     boxClick(entry) {
-      if (!this.isAuthenticated) {
+      if (!this.$isAuthenticated || !entry.obtainable) {
         return;
       }
 
@@ -183,9 +177,6 @@ const app = new Vue({
           entry.inBox = !entry.inBox;
         });
       });
-    },
-    login() {
-      this.$login();
     },
   },
 });
