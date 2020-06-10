@@ -1,22 +1,16 @@
-const CLIENT_ID = "794803752624-fl20v16vgu8nreunpvhelarirm8t0sd6.apps.googleusercontent.com";
-const CLIENT_SECRET = "KMKNvWGUQUO5sbLigqgMrz2k";
-const API_KEY = "AIzaSyA9N5BNv8dl6CRqb6xXqfxJ_VIxEiFS7eY";
-const SPREADSHEET_ID = "1Ize2mVy0wiyY92nzgawZ7065_Rgw5ZQUkmJOwf95Y18";
-const SPREADSHEET_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}`;
-const DISCOVERY_DOCS =["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const SCOPE = "https://www.googleapis.com/auth/spreadsheets";
-const apiConfig = {
-  apiKey: API_KEY,
-  clientId: CLIENT_ID,
-  clientSecret: CLIENT_SECRET,
-  discoveryDocs: DISCOVERY_DOCS,
-  scope: SCOPE,
-};
-
 import Vue from 'vue';
 import VueMaterial from 'vue-material';
 import VueGapi from 'vue-gapi';
 import DexBox from './DexBox';
+import * as CONFIG from './config';
+
+const apiConfig = {
+  apiKey: CONFIG.API_KEY,
+  clientId: CONFIG.CLIENT_ID,
+  clientSecret: CONFIG.CLIENT_SECRET,
+  discoveryDocs: CONFIG.DISCOVERY_DOCS,
+  scope: CONFIG.SCOPE,
+};
 
 Vue.use(VueMaterial);
 Vue.use(VueGapi, apiConfig);
@@ -81,12 +75,14 @@ const app = new Vue({
       return this.chunk(filtered, 30);
     },
     chunkedIsleData() {
-      let filtered = this.dexData.filter(d => d.isleOfArmor);
-      return this.chunk(filtered, 30);
+      let filteredNormal = this.dexData.filter(d => (d.isleOfArmor && !d.gmax));
+      let filteredGmax = this.dexData.filter(d => (d.isleOfArmor && d.gmax));
+      return this.chunk([...filteredNormal, ...filteredGmax], 30);
     },
     chunkedTundraData() {
-      let filtered = this.dexData.filter(d => d.crownTundra);
-      return this.chunk(filtered, 30);
+      let filteredNormal = this.dexData.filter(d => (d.crownTundra && !d.gmax));
+      let filteredGmax = this.dexData.filter(d => (d.crownTundra && d.gmax));
+      return this.chunk([...filteredNormal, ...filteredGmax], 30);
     },
     missingMons() {
       let filtered = this.dexData.filter(d => !d.inBox && d.obtainable);
@@ -139,7 +135,7 @@ const app = new Vue({
       };
     },
     fetchDexData() {
-      fetch(`${SPREADSHEET_URL}?key=${API_KEY}&includeGridData=true&ranges=A2:O822&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges=A2:O823&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -152,31 +148,6 @@ const app = new Vue({
             .map(d => this.createDexJson(d));
         this.dexData = dexData;
       }).finally(() => this.loadingData = false);
-    },
-    boxClick(entry) {
-      if (!this.$isAuthenticated || !entry.obtainable) {
-        return;
-      }
-
-      let body = {
-        values: [[ !entry.inBox ? "Yes" : "No" ]],
-      };
-
-      entry.inBox = !entry.inBox;
-
-      this.$getGapiClient().then(gapi => {
-        gapi.client.sheets.spreadsheets.values.update({
-          spreadsheetId: SPREADSHEET_ID,
-          range: `K${entry.id}`,
-          valueInputOption: "USER_ENTERED",
-          resource: body,
-        })
-        .then()
-        .catch(err => {
-          alert(`Sorry, couldn't complete that "in box" update.`);
-          entry.inBox = !entry.inBox;
-        });
-      });
     },
   },
 });

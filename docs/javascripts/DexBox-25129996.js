@@ -33,7 +33,7 @@ export default {
       <div
         v-for="i in (30 - dexChunk.length)"
         class="md-layout-item md-size-16 box-column"
-        :key="i"
+        :key="'pokemon-' + i"
       >
         <div class="box-item" />
       </div>
