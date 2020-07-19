@@ -1,12 +1,12 @@
 ---
 title: Sarith's Sword
 ---
-<h1 class="md-display-3 page-title">
+<!-- <h1 class="md-display-3 page-title">
   Sarith's Sword
 </h1>
 <h3 class="md-headline page-sub-title">
   - A Living Dex in Mutiple Stages -
-</h3>
+</h3> -->
 
 <div v-if="loading">
   <h5>
@@ -16,7 +16,7 @@ title: Sarith's Sword
 
 <div v-else>
   <div
-    v-if="$isAuthenticated"
+    v-if="$gapi.isAuthenticated()"
     class="open-missing"
     @click.prevent="showMissing = true"
   >
@@ -37,11 +37,20 @@ title: Sarith's Sword
 
   <div class="md-layout md-gutter boxes">
     <span
-      v-for="(dexChunk, index) in chunkedDexData"
-      :key="`dex-chunk-${index}`"
+      v-for="(dexChunk, index) in chunkedGalarData"
+      :key="`galar-chunk-${index}`"
     >
       <dex-box
         title="dex"
+        :dex-chunk="dexChunk"
+      />
+    </span>
+    <span
+      v-for="(dexChunk, index) in chunkedIsleData"
+      :key="`isle-chunk-${index}`"
+    >
+      <dex-box
+        title="isle"
         :dex-chunk="dexChunk"
       />
     </span>
@@ -54,239 +63,14 @@ title: Sarith's Sword
         :dex-chunk="dexChunk"
       />
     </span>
-    <span 
-      v-for="(dexChunk, index) in chunkedHatchableHomeData"
-      :key="`hatchable-home-dex-chunk-${index}`"
-    >
-      <dex-box
-        title="No Place"
-        :dex-chunk="dexChunk"
-      />
-    </span>
     <span
-      v-for="(dexChunk, index) in chunkedLegendaryHomeData"
-      :key="`legendary-home-dex-chunk-${index}`"
+      v-for="(dexChunk, index) in chunkedHomeData"
+      :key="`home-chunk-${index}`"
     >
       <dex-box
-        title="Like Home"
+        title="No Place Like Home"
         :dex-chunk="dexChunk"
       />
     </span>
   </div>
-
-  <div class="md-layout md-gutter boxes md-inset">
-    <span
-      v-for="(dexChunk, index) in chunkedIsleData"
-      :key="`isle-dex-chunk-${index}`"
-    >
-      <dex-box
-        title="The Isle of Armor"
-        :dex-chunk="dexChunk"
-      />
-    </span>
-  </div>
-
-  <div class="md-layout md-gutter boxes">
-    <span
-      v-for="(dexChunk, index) in chunkedTundraData"
-      :key="`tundra-dex-chunk-${index}`"
-    >
-      <dex-box
-        title="The Crown Tundra"
-        :dex-chunk="dexChunk"
-      />
-    </span>
-  </div>
-
-    <!-- <article
-      v-for="(dexChunk, index) in chunkedGmaxData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-gmax-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          Gigantic!
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': $isAuthenticated && !entry.inBox }"
-          @click.prevent="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
-    <article
-      v-for="(dexChunk, index) in chunkedHatchableHomeData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-hatchable-home-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          No Place
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': $isAuthenticated && !entry.inBox }"
-          @click.prevent="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-
-    <article
-      v-for="(dexChunk, index) in chunkedLegendaryHomeData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-legendary-home-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          Like Home
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': $isAuthenticated && !entry.inBox }"
-          @click.prevent="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-  </div>
-  
-  <md-divider class="separator"></md-divider>
-
-  <div class="md-layout md-gutter boxes">
-    <article
-      v-for="(dexChunk, index) in chunkedDLCData"
-      class="box md-layout-item md-layout"
-      :key="`chunk-dlc-${index}`"
-    >
-      <div class="box-title md-layout-item md-size-100">
-        <h4 class="box-title__content">
-          DLC
-        </h4>
-      </div>
-      <div
-        v-for="entry in dexChunk"
-        class="md-layout-item box-column"
-        :key="entry.id"
-      >
-        <div
-          class="box-item"
-          :class="{ 'box-item--missing': $isAuthenticated && !entry.inBox }"
-          @click.prevent="boxClick(entry)"
-        >
-          <img
-            :src="entry.sprite"
-            class="sprite"
-            height="40"
-            loading="lazy"
-          >
-          <md-tooltip>
-            #{{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
-          </md-tooltip>
-        </div>
-      </div>
-      <div
-        v-for="i in (30 - dexChunk.length)"
-        class="md-layout-item md-size-16 box-column"
-        :key="i"
-      >
-        <div class="box-item" />
-      </div>
-    </article>
-  </div>
-
-  <div
-    class="missing-mons-bg"
-    :class="{ 'visible': showMissing }"
-    @click.prevent="showMissing = false"
-  ></div>
-  <article
-    class="missing-mons md-elevation-21"
-    :class="{ 'visible': showMissing }"
-  >
-    <h2 class="md-headline">
-      {{ missingMons.length }} Missing &lsquo;Mons
-    </h2>
-    <div
-      class="close-missing"
-      @click.prevent="showMissing = false"
-    >
-      &times;
-    </div>
-    <p
-      v-for="entry in missingMons"
-      class="body-2"
-      :key="entry.id"
-    >
-      {{ entry.name }}: {{ entry.gender || entry.form || (entry.gmax && "G-Max") }}
-    </p>
-  </article> -->
 </div>

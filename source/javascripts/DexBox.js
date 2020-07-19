@@ -17,6 +17,18 @@ export default {
             {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
           </span>
         </h4>
+        <h4
+          v-else-if="title == 'isle'"
+          class="box-title__content"
+        >
+          Isle, &#8470;
+          <span v-if="dexChunk[dexChunk.length - 1].dexNumber == '-'">
+            {{ chunkNumber(dexChunk[0]) }}-400&plus;
+          </span>
+          <span v-else>
+            {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
+          </span>
+        </h4>
         <h4 
           v-else
           class="box-title__content"
@@ -54,7 +66,7 @@ export default {
   },
   methods: {
     chunkNumber(chunk) {
-      return chunk.dexNumber.replace('#', '');
+      return ("000" + chunk.dexNumber).slice(-3);
     }
   }
 }

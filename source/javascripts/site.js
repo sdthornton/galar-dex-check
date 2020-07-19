@@ -22,7 +22,10 @@ const app = new Vue({
   },
   data() {
     return {
-      dexData: [],
+      galarDexData: [],
+      isleDexData: [],
+      tundraDexData: [],
+      homeData: [],
       loadingGapi: true,
       loadingData: true,
       showMissing: false,
@@ -32,73 +35,49 @@ const app = new Vue({
     loading() {
       return this.loadingGapi || this.loadingData;
     },
-    chunkedUnobtainable() {
-      let filtered = this.dexData.filter(d => !d.obtainable);
-      return this.chunk(filtered, 30);
-    },
-    chunkedDexData() {
-      let filtered = this.dexData.filter(d => {
-        return (
-          !d.gmax &&
-          d.dexNumber.indexOf("#") == 0 ||
-          this.isMew(d) ||
-          this.isGalarSlowpoke(d)
-        );
+    chunkedGalarData() {
+      let filtered = this.galarDexData.filter(d => {
+        return !d.gmax;
       });
       return this.chunk(filtered, 30);
     },
-    chunkedHatchableHomeData() {
-      let filtered = this.dexData.filter(d => {
+    chunkedIsleData() {
+      let galarNatDexes = this.galarDexData.map(a => a.natDex);
+      let filtered = this.isleDexData.filter(d => {
         return (
-          d.dexNumber == "-" &&
-          !d.legendsAndMyths &&
           !d.gmax &&
-          !this.isMew(d) &&
-          !this.isGalarSlowpoke(d)
-        );
-      });
-      return this.chunk(filtered, 30);
-    },
-    chunkedLegendaryHomeData() {
-      let filtered = this.dexData.filter(d => {
-        return (
-          d.dexNumber == "-" &&
-          d.legendsAndMyths &&
-          !d.gmax &&
-          !this.isMew(d)
-        );
+          !galarNatDexes.includes(d.natDex)
+        )
       });
       return this.chunk(filtered, 30);
     },
     chunkedGmaxData() {
-      let filtered = this.dexData.filter(d => d.gmax && d.obtainable);
-      return this.chunk(filtered, 30);
+      let galarFiltered = this.galarDexData.filter(d => d.gmax);
+      let galarNatDexes = galarFiltered.map(a => a.natDex)
+      let isleFiltered = this.isleDexData.filter(d => d.gmax && !galarNatDexes.includes(d.natDex));
+      return [galarFiltered, isleFiltered];
     },
-    chunkedIsleData() {
-      let filteredNormal = this.dexData.filter(d => (d.isleOfArmor && !d.gmax));
-      let filteredGmax = this.dexData.filter(d => (d.isleOfArmor && d.gmax));
-      return this.chunk([...filteredNormal, ...filteredGmax], 30);
-    },
-    chunkedTundraData() {
-      let filteredNormal = this.dexData.filter(d => (d.crownTundra && !d.gmax));
-      let filteredGmax = this.dexData.filter(d => (d.crownTundra && d.gmax));
-      return this.chunk([...filteredNormal, ...filteredGmax], 30);
+    chunkedHomeData() {
+      return this.chunk(this.homeData, 30);
     },
     missingMons() {
-      let filtered = this.dexData.filter(d => !d.inBox && d.obtainable);
-      return filtered;
+      // let filtered = this.dexData.filter(d => !d.inBox && d.obtainable);
+      // return filtered;
+      return [];
     },
   },
   created() {
-    this.$getGapiClient().then(() => this.loadingGapi = false);
+    this.fetchGalarDexData();
+    this.fetchIsleDexData();
+    this.fetchHomeData();
+    this.$gapi.getGapiClient().then(() => this.loadingGapi = false);
     try {
-      window.setInterval(this.$refreshToken(), 2.7e+6);
+      window.setInterval(this.$gapi.refreshToken(), 2.7e+6);
     } catch (err) {
       console.error(err);
     }
   },
   mounted() {
-    this.fetchDexData();
     document.addEventListener('keydown', e => {
       if (e.key == "Escape") {
         this.showMissing = false;
@@ -111,43 +90,56 @@ const app = new Vue({
         return arr.slice(i * size, i * size + size);
       });
     },
-    isMew(d) {
-      return d.name == "Mew";
-    },
-    isGalarSlowpoke(d) {
-      return d.name == "Slowpoke" && d.form == "Galar";
-    },
     createDexJson(d) {
       let spriteReg = /\=image\("/gi;
       return {
         "id": Number(d.values[0].formattedValue),
-        "dexNumber": d.values[1].userEnteredValue.stringValue,
+        "dexNumber": Number(d.values[1].formattedValue),
         "name": d.values[2].userEnteredValue.stringValue,
         "sprite": d.values[3].userEnteredValue.formulaValue.replace(spriteReg, '').replace('")', ''),
         "gender": d.values[4] && d.values[4].userEnteredValue ? d.values[4].userEnteredValue.stringValue : "",
         "form": d.values[5] && d.values[5].userEnteredValue ? d.values[5].userEnteredValue.stringValue : "",
         "gmax": d.values[6] && d.values[6].userEnteredValue ? true : false,
-        "isleOfArmor": d.values[8] && d.values[8].userEnteredValue ? true : false,
-        "crownTundra": d.values[9] && d.values[9].userEnteredValue ? true : false,
-        "inBox": d.values[10].userEnteredValue.stringValue == "Yes" ? true : false,
-        "obtainable": d.values[12] && d.values[12].userEnteredValue ? false : true,
-        "legendsAndMyths": (d.values[13] || d.values[14]) && (d.values[13].userEnteredValue || d.values[14].userEnteredValue) ? true : false,
+        "inBox": d.values[8].userEnteredValue.stringValue == "Yes" ? true : false,
+        "natDex": d.values[9] ? Number(d.values[9].formattedValue) : null,
+        "obtainable": d.values[10] && d.values[10].userEnteredValue ? false : true,
+        "legendOrMyth": (d.values[11] || d.values[12]) && (d.values[11].userEnteredValue || d.values[12].userEnteredValue) ? true : false,
+        "homeTransferOnly": d.values[13] && d.values[13].userEnteredValue == "Yes" ? true : false,
       };
     },
-    fetchDexData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges=A2:O823&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+    fetchGalarDexData() {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Galar'!A2:N607&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(async res => {
-        let data = await res.json();
-        let dexData =
-          data.sheets[0].data[0].rowData
-            .filter(d => d.values && d.values[0] && d.values[0].userEnteredValue)
-            .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
-            .map(d => this.createDexJson(d));
-        this.dexData = dexData;
-      }).finally(() => this.loadingData = false);
+      })
+      .then(async res => this.galarDexData = await this.prepDexResponse(res))
+      .finally(() => this.loadingData = false);
+    },
+    fetchIsleDexData() {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Isle'!A2:N275&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(async res => this.isleDexData = await this.prepDexResponse(res));
+    },
+    fetchHomeData() {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Home'!A2:N37&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(async res => this.homeData = await this.prepDexResponse(res));
+    },
+    async prepDexResponse(res) {
+      let data = await res.json();
+      let dexData =
+        data.sheets[0].data[0].rowData
+          .filter(d => d.values && d.values[0] && d.values[0].userEnteredValue)
+          .filter(d => !(d.values[7] && d.values[7].userEnteredValue))
+          .map(d => this.createDexJson(d));
+      return dexData;
     },
   },
 });

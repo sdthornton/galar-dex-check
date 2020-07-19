@@ -5,7 +5,7 @@ export default {
     <div
       class="box-item"
       :class="{ 
-        'box-item--missing': $isAuthenticated && !entry.inBox,
+        'box-item--missing': $gapi.isAuthenticated() && !entry.inBox,
         'box-item--unobtainable': !entry.obtainable,
       }"
       @click.prevent="boxClick(entry)"
@@ -18,7 +18,10 @@ export default {
         loading="lazy"
       >
       <md-tooltip>
-        {{ entry.dexNumber }}: {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
+        <span v-if="entry.dexNumber">
+          #{{ ("000" + entry.dexNumber).slice(-3) }}:
+        </span> 
+        {{ entry.name }}<span v-if="entry.form || entry.gender">, {{ entry.form || entry.gender }}</span>
       </md-tooltip>
     </div>
   `,
@@ -30,7 +33,7 @@ export default {
   },
   methods: {
     boxClick(entry) {
-      if (!this.$isAuthenticated || !entry.obtainable) {
+      if (!this.$gapi.isAuthenticated() || !entry.obtainable) {
         return;
       }
 
@@ -40,10 +43,10 @@ export default {
 
       entry.inBox = !entry.inBox;
 
-      this.$getGapiClient().then(gapi => {
+      this.$gapi.getGapiClient().then(gapi => {
         gapi.client.sheets.spreadsheets.values.update({
           spreadsheetId: CONFIG.SPREADSHEET_ID,
-          range: `K${entry.id}`,
+          range: `I${entry.id}`,
           valueInputOption: "USER_ENTERED",
           resource: body,
         })

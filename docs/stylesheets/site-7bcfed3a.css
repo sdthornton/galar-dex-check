@@ -23,17 +23,17 @@ main {
 
 .box {
   border-radius: 4px;
-  margin: 28.5714285714px 0 !important;
-  max-width: 400px;
-  min-width: 400px;
+  margin: 22.8571428571px 0 !important;
+  max-width: 320px;
+  min-width: 320px;
   overflow: hidden;
-  padding: 0 28.5714285714px !important;
+  padding: 0 22.8571428571px !important;
   text-align: center;
-  width: 400px; }
+  width: 320px; }
 
 .box-column {
   padding: 4px;
-  width: 57.1428571429px; }
+  width: 45.7142857143px; }
 
 .box-title__content {
   background-color: white;
@@ -48,12 +48,12 @@ main {
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.65);
   cursor: pointer;
-  height: 49.1428571429px;
+  height: 37.7142857143px;
   padding: 4px;
   text-align: center;
   -webkit-transition: all 0.05s ease-in-out;
   transition: all 0.05s ease-in-out;
-  width: 49.1428571429px; }
+  width: 37.7142857143px; }
 
 .box-item--missing {
   opacity: 0.35; }
