@@ -55,6 +55,15 @@ title: Sarith's Sword
       />
     </span>
     <span
+      v-for="(dexChunk, index) in chunkedTundraData"
+      :key="`tundra-chunk-${index}`"
+    >
+      <dex-box
+        title="tundra"
+        :dex-chunk="dexChunk"
+      />
+    </span>
+    <span
       v-for="(dexChunk, index) in chunkedGmaxData"
       :key="`gmax-chunk-${index}`"
     >

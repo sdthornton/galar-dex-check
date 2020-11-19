@@ -10,24 +10,21 @@ export default {
           class="box-title__content"
         >
           &#8470;
-          <span v-if="dexChunk[dexChunk.length - 1].dexNumber == '-'">
-            {{ chunkNumber(dexChunk[0]) }}-400&plus;
-          </span>
-          <span v-else>
-            {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
-          </span>
+          {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
         </h4>
         <h4
           v-else-if="title == 'isle'"
           class="box-title__content"
         >
           Isle, &#8470;
-          <span v-if="dexChunk[dexChunk.length - 1].dexNumber == '-'">
-            {{ chunkNumber(dexChunk[0]) }}-400&plus;
-          </span>
-          <span v-else>
-            {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
-          </span>
+          {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
+        </h4>
+        <h4
+          v-else-if="title == 'tundra'"
+          class="box-title__content"
+        >
+          Tundra, &#8470;
+          {{ chunkNumber(dexChunk[0]) }}-{{ chunkNumber(dexChunk[dexChunk.length - 1]) }}
         </h4>
         <h4 
           v-else

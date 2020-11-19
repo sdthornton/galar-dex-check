@@ -66,6 +66,15 @@
       />
     </span>
     <span
+      v-for="(dexChunk, index) in chunkedTundraData"
+      :key="`tundra-chunk-${index}`"
+    >
+      <dex-box
+        title="tundra"
+        :dex-chunk="dexChunk"
+      />
+    </span>
+    <span
       v-for="(dexChunk, index) in chunkedGmaxData"
       :key="`gmax-chunk-${index}`"
     >
@@ -87,6 +96,6 @@
 </div>
 
     </main>
-    <script src="//sdthornton.github.io/galar-dex-check/javascripts/site.bundle-c7c522fe.js"></script>
+    <script src="//sdthornton.github.io/galar-dex-check/javascripts/site.bundle-21dfaaa0.js"></script>
   </body>
 </html>
