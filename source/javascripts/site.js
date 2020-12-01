@@ -80,7 +80,6 @@ const app = new Vue({
     this.fetchGalarDexData();
     this.fetchIsleDexData();
     this.fetchTundraDexData();
-    // this.fetchHomeData();
     this.$gapi.getGapiClient().then(() => this.loadingGapi = false);
     try {
       window.setInterval(this.$gapi.refreshToken(), 2.7e+6);
@@ -119,7 +118,7 @@ const app = new Vue({
       };
     },
     fetchGalarDexData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Galar'!A2:N607&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Galar'!A2:N609&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -142,14 +141,6 @@ const app = new Vue({
         },
       })
       .then(async res => this.tundraDexData = await this.prepDexResponse(res));
-    },
-    fetchHomeData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Home'!A2:N37&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async res => this.homeData = await this.prepDexResponse(res));
     },
     async prepDexResponse(res) {
       let data = await res.json();
