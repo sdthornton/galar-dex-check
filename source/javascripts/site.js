@@ -118,7 +118,7 @@ const app = new Vue({
       };
     },
     fetchGalarDexData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Galar'!A2:N609&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Galar'!A2:N700&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -127,7 +127,7 @@ const app = new Vue({
       .finally(() => this.loadingData = false);
     },
     fetchIsleDexData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Isle'!A2:N275&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Isle'!A2:N300&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -135,7 +135,7 @@ const app = new Vue({
       .then(async res => this.isleDexData = await this.prepDexResponse(res));
     },
     fetchTundraDexData() {
-      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Tundra'!A2:N255&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
+      fetch(`${CONFIG.SPREADSHEET_URL}?key=${CONFIG.API_KEY}&includeGridData=true&ranges='Tundra'!A2:N300&fields=sheets%2Fdata%2FrowData%2Fvalues`, {
         headers: {
           "Content-Type": "application/json",
         },
